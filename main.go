@@ -9,6 +9,7 @@ import (
 
 type User struct {
 	ID       int
+	Name     string
 	Email    string
 	Password string
 }
@@ -20,6 +21,32 @@ func main() {
 
 	command := flag.String("command", "no-command", "command to run")
 	flag.Parse()
+
+	//get email and password from the client
+	scn := bufio.NewScanner(os.Stdin)
+	fmt.Println("please enter the email: ")
+	scn.Scan()
+	email := scn.Text()
+
+	fmt.Println("please enter the password: ")
+	scn.Scan()
+	password := scn.Text()
+
+	notFound := true
+	for _, user := range userStorage {
+		if user.Email == email {
+			if user.Password == password {
+				notFound = true
+				fmt.Println("You are successfully loged in!!")
+			} else {
+				fmt.Println("The password is incorrect!")
+			}
+
+		}
+	}
+	if notFound {
+		fmt.Println("the email or password is not correct!")
+	}
 
 	for {
 		runCommand(*command)
@@ -55,15 +82,15 @@ func createTask() {
 
 	var name, duedate, category string
 
-	fmt.Println("Please Enter the task title")
+	fmt.Println("Please Enter the task title: ")
 	scanner.Scan()
 	name = scanner.Text()
 
-	fmt.Println("Please Enter the taske duration")
+	fmt.Println("Please Enter the taske duration: ")
 	scanner.Scan()
 	duedate = scanner.Text()
 
-	fmt.Println("Please Enter the task category")
+	fmt.Println("Please Enter the task category: ")
 	scanner.Scan()
 	category = scanner.Text()
 	fmt.Println("task :", name, category, duedate)
@@ -88,7 +115,11 @@ func createCaategory() {
 func registerUser() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	var id, email, password string
+	var id, email, password, name string
+
+	fmt.Println("Please Enter your name: ")
+	scanner.Scan()
+	name = scanner.Text()
 
 	fmt.Println("please enter email: ")
 	scanner.Scan()
@@ -104,6 +135,7 @@ func registerUser() {
 
 	user := User{
 		ID:       len(userStorage) + 1,
+		Name:     name,
 		Email:    email,
 		Password: password,
 	}
@@ -127,7 +159,7 @@ func login() {
 
 	id = email
 
-	fmt.Println(" user :", id, email, password)
+	fmt.Println("user :", id, email, password)
 
 	user := User{
 		ID:       len(userStorage),
