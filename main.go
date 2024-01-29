@@ -23,32 +23,7 @@ func main() {
 	flag.Parse()
 
 	if *command != "register-user" && *command != "exit" {
-		//get email and password from the client
-		fmt.Println("you myst login first!")
-		scn := bufio.NewScanner(os.Stdin)
-		fmt.Println("please enter the email: ")
-		scn.Scan()
-		email := scn.Text()
 
-		fmt.Println("please enter the password: ")
-		scn.Scan()
-		password := scn.Text()
-
-		notFound := true
-		for _, user := range userStorage {
-			if user.Email == email {
-				if user.Password == password {
-					notFound = true
-					fmt.Println("You are successfully loged in!!")
-				} else {
-					fmt.Println("The password is incorrect!")
-				}
-
-			}
-		}
-		if notFound {
-			fmt.Println("the email or password is not correct!")
-		}
 	}
 
 	for {
@@ -150,6 +125,12 @@ func login() {
 
 	var id, email, password string
 
+	//get email and password from the client
+	fmt.Println("you myst login first!")
+	scn := bufio.NewScanner(os.Stdin)
+	fmt.Println("please enter the email: ")
+	scn.Scan()
+
 	fmt.Println("please enter email: ")
 	scanner.Scan()
 	email = scanner.Text()
@@ -157,6 +138,19 @@ func login() {
 	fmt.Println("please enter password: ")
 	scanner.Scan()
 	password = scanner.Text()
+
+	notFound := true
+	for _, user := range userStorage {
+		if user.Email == email && user.Password == password {
+			notFound = false
+		}
+		fmt.Println("You are successfully loged in!!")
+	}
+
+	if notFound {
+		fmt.Println("the email or password is not correct!")
+		return
+	}
 
 	id = email
 
