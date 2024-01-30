@@ -15,6 +15,7 @@ type User struct {
 }
 
 var userStorage []User
+var authenticatedUser *User
 
 func main() {
 	fmt.Println("hello to TODO app")
@@ -22,11 +23,8 @@ func main() {
 	command := flag.String("command", "no-command", "command to run")
 	flag.Parse()
 
-	if *command != "register-user" && *command != "exit" {
-
-	}
-
 	for {
+
 		runCommand(*command)
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Println("please enter another command :")
@@ -37,6 +35,9 @@ func main() {
 }
 
 func runCommand(command string) {
+	if command != "register-user" && command != "exit" && authenticatedUser == nil {
+		login()
+	}
 	switch command {
 	case "create-task":
 		createTask()
@@ -73,6 +74,7 @@ func createTask() {
 }
 
 func createCaategory() {
+
 	scanner := bufio.NewScanner(os.Stdin)
 
 	var title, color string
@@ -126,7 +128,8 @@ func login() {
 	var id, email, password string
 
 	//get email and password from the client
-	fmt.Println("you myst login first!")
+	//fmt.Println("you myst login first!")
+
 	scn := bufio.NewScanner(os.Stdin)
 	fmt.Println("please enter the email: ")
 	scn.Scan()
@@ -139,16 +142,18 @@ func login() {
 	scanner.Scan()
 	password = scanner.Text()
 
-	notFound := true
 	for _, user := range userStorage {
 		if user.Email == email && user.Password == password {
-			notFound = false
+			authenticatedUser = &user
+
+			break
 		}
 		fmt.Println("You are successfully loged in!!")
 	}
 
-	if notFound {
+	if authenticatedUser == nil {
 		fmt.Println("the email or password is not correct!")
+
 		return
 	}
 
