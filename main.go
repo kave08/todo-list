@@ -99,7 +99,22 @@ func createTask() {
 
 	categoryId, err := strconv.Atoi(category)
 	if err != nil {
-		fmt.Printf("category id is not valid integer %v", err.Error())
+		fmt.Printf("category id is not valid integer %v \n", err.Error())
+
+		return
+	}
+
+	isFound := false
+
+	for _, c := range categoryStorage {
+		if c.ID == categoryId && c.UserID == authenticatedUser.ID {
+			break
+		}
+	}
+
+	if !isFound {
+		fmt.Printf("category id is not found, %v \n", err)
+
 		return
 	}
 
